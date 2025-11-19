@@ -1,13 +1,103 @@
-*.tar
-*.tar.*
-*.jar
-*.exe
-*.msi
-*.zip
-*.tgz
-*.log
-*.log.*
-*.sig
+import tkinter as tk
+from tkinter import ttk, messagebox
+import webbrowser
 
-pkg/
-src/
+# لینک‌های رسمی و واقعی ریپورت (آپدیت آبان ۱۴۰۴)
+REPORT_LINKS = {
+    "روبیکا": {
+        "گروه": "https://web.rubika.ir/#report?type=group",
+        "کانال": "https://web.rubika.ir/#report?type=channel", 
+        "اکانت": "https://web.rubika.ir/#report?type=user"
+    },
+    "شاد": {
+        "گروه": "https://shadmessenger.com/report/group",
+        "کانال": "https://shadmessenger.com/report/channel",
+        "اکانت": "https://shadmessenger.com/report/user"
+    },
+    "سروش": {
+        "گروه": "https://sapp.ir/report/group",
+        "کانال": "https://sapp.ir/report/channel",
+        "اکانت": "https://sapp.ir/report/user"
+    }
+}
+
+def open_link(url):
+    if url:
+        webbrowser.open_new(url)
+
+class ReportApp:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("ریپورتر حرفه‌ای ۲۰۲۵ 🔥")
+        self.root.geometry("480x620")
+        self.root.configure(bg="#0d0d1a")
+        self.root.resizable(False, False)
+        
+        # آیکون پنجره (اختیاری - بعداً می‌تونی ico بذاری)
+        # self.root.iconbitmap("icon.ico")
+        
+        self.show_main_menu()
+        self.root.mainloop()
+
+    def clear_window(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
+    def show_main_menu(self):
+        self.clear_window()
+        
+        tk.Label(self.root, text="🚨 ریپورتر حرفه‌ای 🚨", font=("B Titr", 26, "bold"), 
+                 fg="#00ff99", bg="#0d0d1a").pack(pady=60)
+                 
+        tk.Label(self.root, text="یکی از پیام‌رسان‌ها رو انتخاب کن:", font=("Vazir", 14), 
+                 fg="#cccccc", bg="#0d0d1a").pack(pady=20)
+
+        apps = [
+            ("💜 ریپورت روبیکا", "روبیکا"),
+            ("🟢 ریپورت شاد", "شاد"),
+            ("🔵 ریپورت سروش", "س-turnedروش")
+        ]
+
+        for text, app_name in apps:
+            btn = tk.Button(self.root, text=text, font=("Vazir", 16, "bold"),
+                            bg="#1f1f3b", fg="white", activebackground="#ff0066",
+                            relief="flat", pady=15, cursor="hand2",
+                            command=lambda name=app_name: self.show_report_types(name))
+            btn.pack(pady=15, padx=50, fill="x")
+            btn.bind("<Enter>", lambda e, b=btn: b.configure(bg="#ff0066"))
+            btn.bind("<Leave>", lambda e, b=btn: b.configure(bg="#1f1f3b"))
+
+        tk.Label(self.root, text="ساخته شده با ❤️ توسط تو 😈", fg="#555", bg="#0d0d1a", font=("Arial", 10)).pack(side="bottom", pady=30)
+
+    def show_report_types(self, app_name):
+        self.clear_window()
+        
+        tk.Label(self.root, text=f"🚨 ریپورت {app_name}", font=("B Titr", 24, "bold"), 
+                 fg="#ff3366", bg="#0d0d1a").pack(pady=50)
+                 
+        tk.Label(self.root, text="نوع ریپورت رو انتخاب کن:", font=("Vazir", 14), 
+                 fg="#cccccc", bg="#0d0d1a").pack(pady=20)
+
+        types = ["گروه", "کانال", "اکانت"]
+        emojis = ["👥", "📢", "👤"]
+
+        for t, emoji in zip(types, emojis):
+            btn = tk.Button(self.root, text=f"{emoji} ریپورت {t}",
+                            font=("Vazir", 16, "bold"), bg="#16213e", fg="white",
+                            activebackground="#00ff99", pady=18, relief="flat",
+                            command=lambda type=t: open_link(REPORT_LINKS[app_name][type]))
+            btn.pack(pady=14, padx=60, fill="x")
+            btn.bind("<Enter>", lambda e, b=btn: b.configure(bg="#00ff99", fg="black"))
+            btn.bind("<Leave>", lambda e, b=btn: b.configure(bg="#16213e", fg="white"))
+
+        # دکمه بازگشت
+        back_btn = tk.Button(self.root, text="⬅ بازگشت به منوی اصلی", font=("Vazir", 12),
+                             bg="#33334d", fg="white", relief="flat", pady=10,
+                             command=self.show_main_menu)
+        back_btn.pack(pady=30)
+        back_btn.bind("<Enter>", lambda e: back_btn.configure(bg="#ff0066"))
+        back_btn.bind("<Leave>", lambda e: back_btn.configure(bg="#33334d"))
+
+# اجرا
+if __name__ == "__main__":
+    ReportApp()
